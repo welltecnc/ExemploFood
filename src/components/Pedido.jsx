@@ -1,4 +1,5 @@
 import {useState} from 'react'
+import '../css/estilo.css'
 
 //Array de objetos contendo o estado inicial do cardápio
 const cardapio=[
@@ -58,12 +59,51 @@ const Pedido = () => {
         },10000)
     }
 
-
-
-
   return (
     <>
-      
+    <div className="container">
+        <h2>Cardápio do Restaurante</h2>
+        {produtosDisponiveis.map(produto=>(
+            <div key={produto.id} className="item-cardapio">
+                <span>{produto.nome}(R$ {produto.preco.toFixed(2)})</span>
+                <div className="item-controles">
+                    <button onClick={()=>alterarQuantidade(produto.id, -1)} className="btn-qtd">-</button>
+                <span>{produto.quantidade}</span>
+                    <button onClick={() => alterarQuantidade(produto.id, +1)} className="btn-qtd">+</button>
+                </div>
+            </div>
+        ))}
+
+            <hr className="linha"/>
+            <h3>Resumo da Entrega</h3>
+            {carrinho.length === 0 ?(
+             <p>Seu Carrinho está Vazio</p>   
+            ):(
+            <>
+                <ul className="resumo-lista">
+                    {carrinho.map(item =>(
+                        <li key={item.id}>
+                            {item.quantidade} x {item.nome}-R${(item.preco * item.quantidade).toFixed(2)}
+                        </li>
+                    ))}
+                </ul>
+                <p>Subtotal :R${subtotal.toFixed(2)}</p>
+                <p>Taxa de Entrega: R${taxaEntrega.toFixed(2)}</p>
+                <strong className="total">Total a pagar: R$ {total.toFixed(2)}</strong>
+
+                <button className="btn-confirmar" onClick={confirmarPedido} disabled={enviar}>
+                    {enviar ? "Enviando....":"Confirmar Pedido"}
+                </button>
+            </>
+            )}
+            {status && (
+                <div className="alerta-status">
+                    <strong>Alerta:</strong>{status}
+                </div>
+            )}
+
+    </div>
+  
     </>
   )
 }
